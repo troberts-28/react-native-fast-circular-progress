@@ -1,5 +1,5 @@
 {
-    "name": "react-native-fast-circular-progress",
+    "name": "react-native-progress-ring",
     "description": "A performant, simple, flexible circular progress indicator for all React Native apps (Expo and Bare) 🔥",
     "author": {
         "name": "Tim Roberts",
@@ -17,14 +17,14 @@
         "lint": "eslint --ext .ts,.tsx .",
         "lint:fix": "eslint --ext .ts,.tsx . --fix"
     },
-    "homepage": "https://github.com/troberts-28/react-native-fast-circular-progress",
+    "homepage": "https://github.com/troberts-28/react-native-progress-ring",
     "bugs": {
-        "url": "https://github.com/troberts-28/react-native-fast-circular-progress/issues"
+        "url": "https://github.com/troberts-28/react-native-progress-ring/issues"
     },
     "repository": {
         "name": "GitHub",
         "type": "git",
-        "url": "git+https://github.com/troberts-28/react-native-fast-circular-progress.git"
+        "url": "git+https://github.com/troberts-28/react-native-progress-ring.git"
     },
     "publishConfig": {
         "registry": "https://registry.npmjs.org/"
@@ -55,9 +55,9 @@
         "react-native-circle-progress",
         "react-native-circular-progress",
         "react-native-progress",
-        "react-native-progress-ring",
         "react-native-circle-progress-bar",
         "react-native-circular-progress-bar",
+        "react-native-circular-progress-ring",
         "react-native-progress-bar",
         "react-native-progress-circle",
         "react-native-progress-circular",
@@ -66,6 +66,7 @@
         "expo-progress",
         "expo-circle-progress-bar",
         "expo-circular-progress-bar",
+        "expo-circular-progress-ring",
         "expo-progress-bar",
         "expo-progress-ring",
         "expo-progress-circle",
