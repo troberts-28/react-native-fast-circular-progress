@@ -41,16 +41,21 @@
         "expo",
         "progress",
         "progress-indicator",
+        "progress-ring",
         "progress-bar",
         "circular-progress",
         "circle-progress",
+        "ring-progress",
         "circular-progress-indicator",
         "circle-progress-indicator",
         "circular-progress-bar",
         "circle-progress-bar",
+        "circular-progress-ring",
+        "circle-progress-ring",
         "react-native-circle-progress",
         "react-native-circular-progress",
         "react-native-progress",
+        "react-native-progress-ring",
         "react-native-circle-progress-bar",
         "react-native-circular-progress-bar",
         "react-native-progress-bar",
@@ -62,6 +67,7 @@
         "expo-circle-progress-bar",
         "expo-circular-progress-bar",
         "expo-progress-bar",
+        "expo-progress-ring",
         "expo-progress-circle",
         "expo-progress-circular"
     ],
@@ -89,7 +95,8 @@
     "typings": "./dist/index.d.ts",
     "peerDependencies": {
         "react": ">=16.8.0",
-        "react-native": ">=0.59.0"
+        "react-native": ">=0.59.0",
+        "react-native-reanimated": ">=3.0.0"
     },
     "devDependencies": {
         "@babel/core": ">=7.20.0",
@@ -110,5 +117,8 @@
         "metro-react-native-babel-preset": "^0.71.1",
         "react-test-renderer": "^18.0.0",
         "typescript": ">=4.9.4"
+    },
+    "dependencies": {
+        "react-native-reanimated": "^3.4.2"
     }
 }

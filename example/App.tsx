@@ -6,28 +6,23 @@ import { CircularProgress } from "./src";
 const App = () => {
     const [progress, setProgress] = useState(0);
 
-    // useEffect(() => {
-    //     const interval = setInterval(() => {
-    //         setProgress((prev) => {
-    //             if (prev >= 1) {
-    //                 clearInterval(interval);
-    //                 return 1;
-    //             }
-    //             return prev + 0.01;
-    //         });
-    //     }, 50);
-    //     return () => {
-    //         clearInterval(interval);
-    //     };
-    // }, []);
+    useEffect(() => {
+        const timeout = setTimeout(() => {
+            setProgress(0);
+        }, 500);
+        return () => {
+            clearTimeout(timeout);
+        };
+    }, []);
 
     return (
         <View style={styles.container}>
             <CircularProgress
-                radius={50}
-                strokeWidth={10}
-                duration={5000}
-                progress={1}
+                radius={150}
+                strokeWidth={30}
+                inActiveStrokeWidth={40}
+                duration={2000}
+                progress={progress}
             />
         </View>
     );
