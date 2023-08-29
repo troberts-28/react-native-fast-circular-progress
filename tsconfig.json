@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+        "declaration": true,
+        "outDir": "./dist",
+        "rootDir": "./src",
+        "jsx": "react-native",
+        "strict": true,
+        "esModuleInterop": true,
+        "strictPropertyInitialization": false,
+        "skipLibCheck": true
+    },
+    "exclude": ["example/*", "dist/*", "src/tests*"],
+}
