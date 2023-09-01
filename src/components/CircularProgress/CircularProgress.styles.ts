@@ -5,7 +5,7 @@ import { TrackColorType } from ".";
 
 export interface CustomCircularProgressStyles {
     theme: "light" | "dark";
-    radius: number;
+    size: number;
     trackWidth: number;
     inActiveTrackWidth: number;
     trackColor?: string | TrackColorType[];
@@ -31,7 +31,7 @@ const COLORS = {
 
 export const generateStyles = ({
     theme,
-    radius,
+    size,
     trackWidth,
     inActiveTrackWidth,
     trackColor,
@@ -41,6 +41,7 @@ export const generateStyles = ({
     rotateStartPointBy,
     containerStyle,
 }: CustomCircularProgressStyles) => {
+    const radius = size / 2;
     const ringPadding = (inActiveTrackWidth - trackWidth) / 2;
     const activeRingRadius = radius - ringPadding;
     const innerActiveRingRadius = radius - inActiveTrackWidth + ringPadding;
@@ -52,8 +53,8 @@ export const generateStyles = ({
 
     return StyleSheet.create({
         container: {
-            width: radius * 2,
-            height: radius * 2,
+            width: size,
+            height: size,
             position: "relative",
             transform: [
                 { scaleX: clockwise ? 1 : -1 },
@@ -63,8 +64,8 @@ export const generateStyles = ({
         },
         inActiveTrack: {
             position: "absolute",
-            width: radius * 2,
-            height: radius * 2,
+            width: size,
+            height: size,
             borderRadius: radius,
             borderWidth: inActiveTrackWidth,
             borderColor: inActiveTrackColor ?? COLORS[theme].inactiveTrack,
@@ -91,7 +92,7 @@ export const generateStyles = ({
             top: 0,
             left: 0,
             width: radius,
-            height: radius * 2,
+            height: size,
             borderTopLeftRadius: radius,
             borderBottomLeftRadius: radius,
             backgroundColor: inActiveTrackColor ?? COLORS[theme].inactiveTrack,
@@ -127,6 +128,8 @@ export const generateStyles = ({
             width: trackWidth,
             height: trackWidth,
             borderRadius: trackWidth / 2,
+            top: ringPadding,
+            left: radius - trackWidth / 2,
             backgroundColor: initialTrackColor ?? COLORS[theme].track,
             zIndex: 2,
         },
