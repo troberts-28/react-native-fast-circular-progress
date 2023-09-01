@@ -24,18 +24,6 @@ export type TrackColorType = {
     color: string;
 };
 
-type LinearGradientPoint = {
-    x: number;
-    y: number;
-};
-
-export type LinearGradientProps = React.ComponentProps<typeof View> & {
-    colors: string[];
-    locations?: number[] | null;
-    start?: LinearGradientPoint | null;
-    end?: LinearGradientPoint | null;
-};
-
 export interface CircularProgressRef {
     reset: (options?: { startInPausedState?: boolean }) => void;
 }
@@ -58,8 +46,6 @@ export interface CircularProgressProps {
     trackColor?: string | TrackColorType[];
     inActiveTrackColor?: string;
     backgroundColor?: string;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    LinearGradient?: any;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     containerStyle?: any;
 }
@@ -84,7 +70,6 @@ const CircularProgress = forwardRef(
             trackColor,
             inActiveTrackColor,
             backgroundColor,
-            LinearGradient, // TODO: make it possible to apply Linear Gradient - does this work with animated track colors?
             containerStyle,
         }: CircularProgressProps,
         ref
@@ -163,53 +148,67 @@ const CircularProgress = forwardRef(
             },
         }));
 
-        const activeTrackRightHalfAnimatedStyle = useAnimatedStyle(() => {
+        const animatedTrackColors = useMemo(() => {
+            if (typeof trackColor !== "string" && trackColor !== undefined) {
+                const sortedTrackColors = trackColor.sort(
+                    (a, b) => a.value - b.value
+                );
+                return {
+                    values: sortedTrackColors.map((item) => item.value),
+                    colors: sortedTrackColors.map((item) => item.color),
+                };
+            }
+        }, [trackColor]);
+
+        const trackAnimatedColorStyle = useAnimatedStyle(() => {
+            if (!animatedTrackColors) {
+                return {};
+            }
+
             return {
-                opacity: animatedProgress.value > 0 ? 1 : 0,
-                color:
-                    typeof trackColor !== "string" && trackColor !== undefined
-                        ? // TODO: adjust color interpolation for RHS / LHS
-                          interpolateColor(
-                              animatedProgress.value * 100,
-                              trackColor.map((item) => item.value),
-                              trackColor.map((item) => item.color)
-                          )
-                        : {},
-                transform: [
-                    {
-                        rotate: `${
-                            animatedProgress.value <= 0.5
-                                ? animatedProgress.value * 360 - 180
-                                : 0
-                        }deg`,
-                    },
-                ],
+                backgroundColor: interpolateColor(
+                    animatedProgress.value * 100,
+                    animatedTrackColors?.values,
+                    animatedTrackColors?.colors
+                ),
             };
         });
 
-        const activeTrackLeftHalfAnimatedStyle = useAnimatedStyle(() => {
-            return {
-                opacity: animatedProgress.value > 0.5 ? 1 : 0,
-                color:
-                    typeof trackColor !== "string" && trackColor !== undefined
-                        ? interpolateColor(
-                              animatedProgress.value * 100,
-                              trackColor.map((item) => item.value),
-                              trackColor.map((item) => item.color)
-                          )
-                        : {},
-                transform: [
-                    {
-                        rotate:
-                            animatedProgress.value > 0.5
-                                ? `${
-                                      (animatedProgress.value - 0.5) * 360 - 180
-                                  }deg`
-                                : "0deg",
-                    },
-                ],
-            };
-        });
+        const activeTrackRightHalfContainerAnimatedStyle = useAnimatedStyle(
+            () => {
+                return {
+                    opacity: animatedProgress.value > 0 ? 1 : 0,
+                    transform: [
+                        {
+                            rotate: `${
+                                animatedProgress.value <= 0.5
+                                    ? animatedProgress.value * 360 - 180
+                                    : 0
+                            }deg`,
+                        },
+                    ],
+                };
+            }
+        );
+
+        const activeTrackLeftHalfContainerAnimatedStyle = useAnimatedStyle(
+            () => {
+                return {
+                    opacity: animatedProgress.value > 0.5 ? 1 : 0,
+                    transform: [
+                        {
+                            rotate:
+                                animatedProgress.value > 0.5
+                                    ? `${
+                                          (animatedProgress.value - 0.5) * 360 -
+                                          180
+                                      }deg`
+                                    : "0deg",
+                        },
+                    ],
+                };
+            }
+        );
 
         // used to mask the side of the active track that goes beyond 0 degrees
         // when the progress is less than 50%
@@ -255,9 +254,14 @@ const CircularProgress = forwardRef(
                 <Animated.View
                     style={[
                         styles.activeTrackRightHalfContainer,
-                        activeTrackRightHalfAnimatedStyle,
+                        activeTrackRightHalfContainerAnimatedStyle,
                     ]}>
-                    <View style={styles.activeTrackRightHalf} />
+                    <Animated.View
+                        style={[
+                            styles.activeTrackRightHalf,
+                            trackAnimatedColorStyle,
+                        ]}
+                    />
                 </Animated.View>
 
                 {/* Mask for right half of active track */}
@@ -272,22 +276,35 @@ const CircularProgress = forwardRef(
                 <Animated.View
                     style={[
                         styles.activeTrackLeftHalfContainer,
-                        activeTrackLeftHalfAnimatedStyle,
+                        activeTrackLeftHalfContainerAnimatedStyle,
                     ]}>
-                    <View style={styles.activeTrackLeftHalf} />
+                    <Animated.View
+                        style={[
+                            styles.activeTrackLeftHalf,
+                            trackAnimatedColorStyle,
+                        ]}
+                    />
                 </Animated.View>
 
                 {/* Circle at the start for rounded edge */}
                 {useRoundedTip ? (
                     <Animated.View
-                        style={[styles.roundedTipStart, startTipAnimatedStyle]}
+                        style={[
+                            styles.roundedTipStart,
+                            startTipAnimatedStyle,
+                            trackAnimatedColorStyle,
+                        ]}
                     />
                 ) : null}
 
                 {/* Circle at the end for rounded edge */}
                 {useRoundedTip ? (
                     <Animated.View
-                        style={[styles.roundedTipEnd, endTipAnimatedStyle]}
+                        style={[
+                            styles.roundedTipEnd,
+                            endTipAnimatedStyle,
+                            trackAnimatedColorStyle,
+                        ]}
                     />
                 ) : null}
 

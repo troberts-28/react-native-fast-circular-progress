@@ -35,13 +35,6 @@ This component **only requires one peer dependency** to work in your React Nativ
 
 -   [react-native-reanimated](https://docs.swmansion.com/react-native-reanimated/docs/fundamentals/installation/)
 
-If you want your ring to have a color gradient, you will need to install either:
-
--   [expo-linear-gradient](https://www.npmjs.com/package/expo-linear-gradient) (if using Expo)
--   [react-native-linear-gradient](https://www.npmjs.com/package/react-native-linear-gradient) (if using in a bare React Native project)
-
-**To enable the linear gradient, you need to supply the component as a prop to CircularProgress.**
-
 <br>
 
 ## Installation 🚀

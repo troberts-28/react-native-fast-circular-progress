@@ -19,12 +19,12 @@ export interface CustomCircularProgressStyles {
 const COLORS = {
     light: {
         track: "#10B981",
-        inactiveTrack: "#ddd",
+        inactiveTrack: "#dddddd",
         background: "#ffffff",
     },
     dark: {
-        track: "#10B981",
-        inactiveTrack: "#ddd",
+        track: "#6EE7B7",
+        inactiveTrack: "#808080",
         background: "#000000",
     },
 };

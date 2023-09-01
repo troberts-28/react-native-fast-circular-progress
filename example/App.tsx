@@ -8,8 +8,8 @@ const App = () => {
 
     useEffect(() => {
         const timeout = setTimeout(() => {
-            setProgress(0);
-        }, 500);
+            setProgress(60);
+        }, 0);
         return () => {
             clearTimeout(timeout);
         };
