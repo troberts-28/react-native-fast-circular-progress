@@ -19,8 +19,8 @@ const App = () => {
         <View style={styles.container}>
             <CircularProgress
                 radius={150}
-                strokeWidth={30}
-                inActiveStrokeWidth={40}
+                trackWidth={30}
+                inActiveTrackWidth={40}
                 duration={2000}
                 progress={progress}
             />

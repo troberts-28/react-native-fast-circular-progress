@@ -1,51 +1,64 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { StyleSheet } from "react-native";
 
+import { TrackColorType } from ".";
+
 export interface CustomCircularProgressStyles {
     theme: "light" | "dark";
     radius: number;
     trackWidth: number;
     inActiveTrackWidth: number;
-    trackColor?: string;
+    trackColor?: string | TrackColorType[];
     inActiveTrackColor?: string;
     backgroundColor?: string;
+    clockwise?: boolean;
+    rotateStartPointBy?: number;
     containerStyle?: any;
 }
 
 const COLORS = {
     light: {
-        track: "tomato",
+        track: "#10B981",
         inactiveTrack: "#ddd",
         background: "#ffffff",
     },
     dark: {
-        track: "tomato",
+        track: "#10B981",
         inactiveTrack: "#ddd",
         background: "#000000",
     },
 };
 
-export const generateStyles = (customStyles: CustomCircularProgressStyles) => {
-    const {
-        theme,
-        radius,
-        trackWidth,
-        inActiveTrackWidth,
-        trackColor,
-        inActiveTrackColor,
-        backgroundColor,
-        containerStyle,
-    } = customStyles;
-
+export const generateStyles = ({
+    theme,
+    radius,
+    trackWidth,
+    inActiveTrackWidth,
+    trackColor,
+    inActiveTrackColor,
+    backgroundColor,
+    clockwise,
+    rotateStartPointBy,
+    containerStyle,
+}: CustomCircularProgressStyles) => {
     const ringPadding = (inActiveTrackWidth - trackWidth) / 2;
     const activeRingRadius = radius - ringPadding;
     const innerActiveRingRadius = radius - inActiveTrackWidth + ringPadding;
+
+    const initialTrackColor =
+        typeof trackColor === "string" || trackColor === undefined
+            ? trackColor
+            : trackColor[0].color;
 
     return StyleSheet.create({
         container: {
             width: radius * 2,
             height: radius * 2,
             position: "relative",
+            transform: [
+                { scaleX: clockwise ? 1 : -1 },
+                { rotate: `${rotateStartPointBy}deg` },
+            ],
             ...containerStyle,
         },
         inActiveTrack: {
@@ -54,7 +67,7 @@ export const generateStyles = (customStyles: CustomCircularProgressStyles) => {
             height: radius * 2,
             borderRadius: radius,
             borderWidth: inActiveTrackWidth,
-            borderColor: inActiveTrackColor,
+            borderColor: inActiveTrackColor ?? COLORS[theme].inactiveTrack,
             zIndex: 0,
         },
         activeTrackRightHalfContainer: {
@@ -71,7 +84,7 @@ export const generateStyles = (customStyles: CustomCircularProgressStyles) => {
             height: activeRingRadius * 2,
             borderTopRightRadius: activeRingRadius,
             borderBottomRightRadius: activeRingRadius,
-            backgroundColor: trackColor ?? COLORS[theme].track,
+            backgroundColor: initialTrackColor ?? COLORS[theme].track,
         },
         activeTrackMaskRightHalf: {
             position: "absolute",
@@ -97,7 +110,7 @@ export const generateStyles = (customStyles: CustomCircularProgressStyles) => {
             height: activeRingRadius * 2,
             borderTopLeftRadius: activeRingRadius,
             borderBottomLeftRadius: activeRingRadius,
-            backgroundColor: trackColor ?? COLORS[theme].track,
+            backgroundColor: initialTrackColor ?? COLORS[theme].track,
         },
         roundedTipStart: {
             position: "absolute",
@@ -106,7 +119,7 @@ export const generateStyles = (customStyles: CustomCircularProgressStyles) => {
             borderRadius: trackWidth / 2,
             top: ringPadding,
             left: radius - trackWidth / 2,
-            backgroundColor: trackColor ?? COLORS[theme].track,
+            backgroundColor: initialTrackColor ?? COLORS[theme].track,
             zIndex: 2,
         },
         roundedTipEnd: {
@@ -114,7 +127,7 @@ export const generateStyles = (customStyles: CustomCircularProgressStyles) => {
             width: trackWidth,
             height: trackWidth,
             borderRadius: trackWidth / 2,
-            backgroundColor: trackColor ?? COLORS[theme].track,
+            backgroundColor: initialTrackColor ?? COLORS[theme].track,
             zIndex: 2,
         },
         inActiveTrackInnerOverlay: {

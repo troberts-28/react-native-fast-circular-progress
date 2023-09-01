@@ -118,8 +118,5 @@
         "metro-react-native-babel-preset": "^0.71.1",
         "react-test-renderer": "^18.0.0",
         "typescript": ">=4.9.4"
-    },
-    "dependencies": {
-        "react-native-reanimated": "^3.4.2"
     }
 }
