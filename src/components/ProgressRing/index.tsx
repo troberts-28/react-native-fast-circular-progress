@@ -20,22 +20,22 @@ import Animated, {
     cancelAnimation,
 } from "react-native-reanimated";
 
-import { generateStyles } from "./CircularProgress.styles";
+import { generateStyles } from "./ProgressRing.styles";
 
 export type TrackColorType = {
     value: number;
     color: string;
 };
 
-export interface CircularProgressRef {
+export interface ProgressRingRef {
     play: () => void;
     pause: () => void;
     reset: (options?: { startInPausedState?: boolean }) => void;
 }
 
-export interface CircularProgressProps {
+export interface ProgressRingProps {
     progress: number; // between zero and 100
-    initialValue?: number; // useful if using as a countdown timer
+    initialProgress?: number; // useful if using as a countdown timer
     duration?: number;
     delay?: number;
     startInPausedState?: boolean;
@@ -55,19 +55,16 @@ export interface CircularProgressProps {
     containerStyle?: any;
 }
 
-// FIX END ROUNDED TIP
-// FIX RESET REF FN
-
-const CircularProgress = forwardRef(
+const ProgressRing = forwardRef(
     (
         {
             progress,
-            initialValue = 0,
+            initialProgress = 0,
             duration = 500,
             delay = 0,
             startInPausedState = false,
             onAnimationComplete,
-            easing = Easing.inOut(Easing.quad),
+            easing = Easing.linear,
             clockwise = true,
             rotateStartPointBy = 0,
             size = 300,
@@ -79,7 +76,7 @@ const CircularProgress = forwardRef(
             inActiveTrackColor,
             backgroundColor,
             containerStyle,
-        }: CircularProgressProps,
+        }: ProgressRingProps,
         ref
     ) => {
         const styles = useMemo(
@@ -87,6 +84,7 @@ const CircularProgress = forwardRef(
                 generateStyles({
                     theme,
                     size,
+                    progress,
                     trackWidth,
                     inActiveTrackWidth,
                     trackColor,
@@ -99,6 +97,7 @@ const CircularProgress = forwardRef(
             [
                 theme,
                 size,
+                progress,
                 trackWidth,
                 inActiveTrackWidth,
                 trackColor,
@@ -114,51 +113,75 @@ const CircularProgress = forwardRef(
         const adjustedProgress = useMemo(() => {
             return Math.min(Math.max(progress / 100, 0), 1);
         }, [progress]);
-        const adjustedInitalValue = useMemo(() => {
-            return Math.min(Math.max(initialValue / 100, 0), 1);
-        }, [initialValue]);
+        const adjustedInitalProgress = useMemo(() => {
+            return Math.min(Math.max(initialProgress / 100, 0), 1);
+        }, [initialProgress]);
 
-        const animatedProgress = useSharedValue(adjustedInitalValue);
+        const animatedProgress = useSharedValue(adjustedInitalProgress);
+        const animationInProgress = useSharedValue(false);
+        // store the progress we are animating from so we can adjust animation duration after pausing
+        const previousProgress = useSharedValue(adjustedInitalProgress);
         const angle = useSharedValue(-Math.PI / 2);
 
         const animateProgress = useCallback(() => {
+            if (animatedProgress.value === adjustedProgress) {
+                return;
+            }
+
+            const adjustedDuration =
+                adjustedProgress - previousProgress.value != 0
+                    ? Math.abs(
+                          (adjustedProgress - animatedProgress.value) /
+                              (adjustedProgress - previousProgress.value)
+                      ) * duration
+                    : duration;
+
+            animationInProgress.value = true;
+
             animatedProgress.value = withDelay(
                 delay,
                 withTiming(
                     adjustedProgress,
                     {
-                        duration,
+                        duration: adjustedDuration,
                         easing,
                     },
                     (isFinished) => {
-                        if (isFinished && onAnimationComplete) {
-                            runOnJS(onAnimationComplete)();
+                        if (isFinished) {
+                            animationInProgress.value = false;
+                            previousProgress.value = animatedProgress.value;
+                            if (onAnimationComplete) {
+                                runOnJS(onAnimationComplete)();
+                            }
                         }
                     }
                 )
             );
 
             // map progress [0, 1] to angle [-π/2, 3π/2]
-            angle.value = withTiming(
-                -Math.PI / 2 + 2 * Math.PI * adjustedProgress,
-                {
-                    duration,
+            angle.value = withDelay(
+                delay,
+                withTiming(-Math.PI / 2 + 2 * Math.PI * adjustedProgress, {
+                    duration: adjustedDuration,
                     easing,
-                }
+                })
             );
+            // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [
             adjustedProgress,
-            angle,
             animatedProgress,
+            angle,
             delay,
             duration,
             easing,
             onAnimationComplete,
+            previousProgress.value,
         ]);
 
         const play = useCallback(() => {
             // Use the stored progress to continue the animation
             animateProgress();
+            // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [animateProgress]);
 
         const pause = useCallback(() => {
@@ -168,12 +191,14 @@ const CircularProgress = forwardRef(
         }, []);
 
         const reset = useCallback(() => {
+            previousProgress.value = adjustedInitalProgress;
             animatedProgress.value = Math.min(
-                Math.max(initialValue / 100, 0),
+                Math.max(initialProgress / 100, 0),
                 1
             );
             angle.value = -Math.PI / 2;
-        }, [angle, animatedProgress, initialValue]);
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+        }, [adjustedInitalProgress, initialProgress]);
 
         const initialRender = useRef(true);
 
@@ -184,7 +209,14 @@ const CircularProgress = forwardRef(
                     return;
                 }
             }
-            //animate progress value whenever it changes
+            // if we are already animating progress when the progress changes
+            // cancel the current animations and update previous progress based on current progress
+            // so adjusted duration is correct
+            if (animationInProgress.value === true) {
+                pause();
+                previousProgress.value = animatedProgress.value;
+            }
+            // animate progress value whenever it changes
             animateProgress();
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [adjustedProgress]);
@@ -198,7 +230,6 @@ const CircularProgress = forwardRef(
             },
             play: () => {
                 play();
-                // paused.value = false;
             },
             pause: () => {
                 pause();
@@ -379,4 +410,4 @@ const CircularProgress = forwardRef(
     }
 );
 
-export default React.memo(CircularProgress);
+export default React.memo(ProgressRing);

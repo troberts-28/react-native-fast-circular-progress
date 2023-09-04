@@ -15,10 +15,10 @@ Works with Expo and bare React Native apps.
 - [Peer Dependencies 👶](#peer-dependencies-)
 - [Installation 🚀](#installation-)
 - [Examples 😎](#examples-)
-    - [Circular Progress (Dark Mode) 🌚](#circular-progress-dark-mode-)
-    - [Circular Progress (Light Mode) 🌞](#circular-progress-light-mode-)
+    - [Progress Ring (Dark Mode) 🌚](#progress-ring-dark-mode-)
+    - [Progress Ring (Light Mode) 🌞](#progress-ring-light-mode-)
 - [Props 💅](#props-)
-    - [CircularProgress ⏲️](#circularprogress-️)
+    - [ProgressRing ⏲️](#progressring-️)
         - [Custom Styles 👗](#custom-styles-)
 - [Methods 🔄](#methods-)
 - [License 📝](#license-)
@@ -59,7 +59,7 @@ yarn add react-native-progress-ring
 
 ## Examples 😎
 
-### Circular Progress (Dark Mode) 🌚
+### Progress Ring (Dark Mode) 🌚
 
 ```jsx
 
@@ -67,7 +67,7 @@ yarn add react-native-progress-ring
 
 <!-- <img src="demos/example1.gif" width="250" height="550"/> -->
 
-### Circular Progress (Light Mode) 🌞
+### Progress Ring (Light Mode) 🌞
 
 ```jsx
 
@@ -79,20 +79,20 @@ yarn add react-native-progress-ring
 
 ## Props 💅
 
-### CircularProgress ⏲️
+### ProgressRing ⏲️
 
 #### Custom Styles 👗
 
-The following custom styles can be supplied to re-style the component in any way. Various styles are applied by default - you can take a look at these [here](src/components/CircularProgress/CircularProgress.styles.ts).
+The following custom styles can be supplied to re-style the component in any way. Various styles are applied by default - you can take a look at these [here](src/components/ProgressRing/ProgressRing.styles.ts).
 
 <br>
 
 ## Methods 🔄
 
-The library exposes a CircularProgressRef type, which can be used to type your ref to the picker:
+The library exposes a ProgressRingRef type, which can be used to type your ref to the picker:
 
 ```javascript
-const circularProgressRef = useRef<CircularProgressRef>(null);
+const progressRingRef = useRef<ProgressRingRef>(null);
 ```
 
 It has the following available methods:
@@ -100,7 +100,7 @@ It has the following available methods:
 `reset` - imperative method to reset the progress ring to its initial state. The `startInPausedState` option defines whether the animation will play when this is called. If that option is not defined, it will fall back to the `startInPausedState` prop (if defined).
 
 ```javascript
-circularProgressRef.current.reset(options?: { startInPausedState?: boolean });
+progressRingRef.current.reset(options?: { startInPausedState?: boolean });
 ```
 
 <br>

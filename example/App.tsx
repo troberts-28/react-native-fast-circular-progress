@@ -1,40 +1,36 @@
 import React, { useState, useEffect, useRef } from "react";
 import { View, StyleSheet, Button } from "react-native";
 
-import { CircularProgress, CircularProgressRef } from "./src";
+import { ProgressRing, ProgressRingRef } from "./src";
+import { Easing } from "react-native-reanimated";
 
 const App = () => {
     const [progress, setProgress] = useState(0);
 
     useEffect(() => {
         const timeout = setTimeout(() => {
-            setProgress(80);
+            setProgress(10);
         }, 1500);
         return () => {
             clearTimeout(timeout);
         };
     }, []);
 
-    const size = 120;
+    const size = 160;
 
-    const ref = useRef<CircularProgressRef>(null);
+    const ref = useRef<ProgressRingRef>(null);
 
     return (
         <View style={styles.container}>
-            <CircularProgress
+            <ProgressRing
                 ref={ref}
-                progress={80}
+                progress={0}
                 size={size}
                 trackWidth={size * 0.12}
                 inActiveTrackWidth={size * 0.185}
-                duration={3000}
+                duration={1500}
+                easing={Easing.linear}
                 startInPausedState
-                // startInPausedState={startInPausedState}
-                // tintColorSecondary={
-                //     progress < 100
-                //         ? customColors.secondary["500"]
-                //         : customColors.success["400"]
-                // }
             />
             <View style={{ flexDirection: "row" }}>
                 <Button

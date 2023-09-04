@@ -1,5 +1,5 @@
 export {
-    default as CircularProgress,
-    CircularProgressProps,
-    CircularProgressRef,
-} from "./components/CircularProgress";
+    default as ProgressRing,
+    ProgressRingProps,
+    ProgressRingRef,
+} from "./components/ProgressRing";

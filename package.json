@@ -1,12 +1,12 @@
 {
     "name": "react-native-progress-ring",
-    "description": "A performant, simple, flexible circular progress indicator for all React Native apps (Expo and Bare) 🔥",
+    "description": "A performant, simple, flexible circular progress ring component for all React Native apps (Expo and Bare) 🔥",
     "author": {
         "name": "Tim Roberts",
         "url": "https://github.com/troberts-28"
     },
     "license": "MIT",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "scripts": {
