@@ -127,6 +127,7 @@ export const generateStyles = ({
             top: ringPadding,
             left: radius - trackWidth / 2,
             backgroundColor: initialTrackColor ?? COLORS[theme].track,
+            opacity: 0,
             zIndex: 2,
         },
         roundedTipEnd: {
@@ -137,6 +138,7 @@ export const generateStyles = ({
             top: y + radius - trackWidth / 2,
             left: x + radius - trackWidth / 2,
             backgroundColor: initialTrackColor ?? COLORS[theme].track,
+            opacity: 0,
             zIndex: 2,
         },
         inActiveTrackInnerOverlay: {

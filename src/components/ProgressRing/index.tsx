@@ -55,6 +55,9 @@ export interface ProgressRingProps {
     containerStyle?: any;
 }
 
+// FIX STYLING FOR active track width > inactive track width
+// make it possible to just have dot?
+
 const ProgressRing = forwardRef(
     (
         {
@@ -378,26 +381,25 @@ const ProgressRing = forwardRef(
                     />
                 </Animated.View>
 
-                {/* Circle at the start for rounded edge */}
                 {useRoundedTip ? (
-                    <Animated.View
-                        style={[
-                            styles.roundedTipStart,
-                            startTipAnimatedStyle,
-                            trackAnimatedColorStyle,
-                        ]}
-                    />
-                ) : null}
-
-                {/* Circle at the end for rounded edge */}
-                {useRoundedTip ? (
-                    <Animated.View
-                        style={[
-                            styles.roundedTipEnd,
-                            endTipAnimatedStyle,
-                            trackAnimatedColorStyle,
-                        ]}
-                    />
+                    <>
+                        {/* Circle at the start for rounded edge */}
+                        <Animated.View
+                            style={[
+                                styles.roundedTipStart,
+                                startTipAnimatedStyle,
+                                trackAnimatedColorStyle,
+                            ]}
+                        />
+                        {/* Circle at the end for rounded edge */}
+                        <Animated.View
+                            style={[
+                                styles.roundedTipEnd,
+                                endTipAnimatedStyle,
+                                trackAnimatedColorStyle,
+                            ]}
+                        />
+                    </>
                 ) : null}
 
                 {/* Circle to show the inner inactive track */}
