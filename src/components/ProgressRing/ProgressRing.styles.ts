@@ -66,6 +66,7 @@ export const generateStyles = ({
                 { scaleX: clockwise ? 1 : -1 },
                 { rotate: `${rotateStartPointBy}deg` },
             ],
+            overflow: "hidden",
             ...containerStyle,
         },
         inActiveTrack: {
@@ -75,6 +76,7 @@ export const generateStyles = ({
             borderRadius: radius,
             borderWidth: inActiveTrackWidth,
             borderColor: inActiveTrackColor ?? COLORS[theme].inactiveTrack,
+            overflow: "hidden",
             zIndex: 0,
         },
         activeTrackRightHalfContainer: {
@@ -84,7 +86,7 @@ export const generateStyles = ({
             width: activeRingRadius * 2,
             height: activeRingRadius * 2,
             alignItems: "flex-end",
-            zIndex: 2,
+            zIndex: 1,
         },
         activeTrackRightHalf: {
             width: activeRingRadius,
@@ -92,6 +94,7 @@ export const generateStyles = ({
             borderTopRightRadius: activeRingRadius,
             borderBottomRightRadius: activeRingRadius,
             backgroundColor: initialTrackColor ?? COLORS[theme].track,
+            overflow: "hidden",
         },
         activeTrackMaskRightHalf: {
             position: "absolute",
@@ -102,6 +105,7 @@ export const generateStyles = ({
             borderTopLeftRadius: radius,
             borderBottomLeftRadius: radius,
             backgroundColor: inActiveTrackColor ?? COLORS[theme].inactiveTrack,
+            overflow: "hidden",
             zIndex: 2,
         },
         activeTrackLeftHalfContainer: {
@@ -110,7 +114,7 @@ export const generateStyles = ({
             left: ringPadding,
             width: activeRingRadius * 2,
             height: activeRingRadius * 2,
-            zIndex: 2,
+            zIndex: 1,
         },
         activeTrackLeftHalf: {
             width: activeRingRadius,
@@ -118,6 +122,7 @@ export const generateStyles = ({
             borderTopLeftRadius: activeRingRadius,
             borderBottomLeftRadius: activeRingRadius,
             backgroundColor: initialTrackColor ?? COLORS[theme].track,
+            overflow: "hidden",
         },
         roundedTipStart: {
             position: "absolute",
@@ -128,6 +133,7 @@ export const generateStyles = ({
             left: radius - trackWidth / 2,
             backgroundColor: initialTrackColor ?? COLORS[theme].track,
             opacity: 0,
+            overflow: "hidden",
             zIndex: 2,
         },
         roundedTipEnd: {
@@ -139,6 +145,7 @@ export const generateStyles = ({
             left: x + radius - trackWidth / 2,
             backgroundColor: initialTrackColor ?? COLORS[theme].track,
             opacity: 0,
+            overflow: "hidden",
             zIndex: 2,
         },
         inActiveTrackInnerOverlay: {
@@ -149,6 +156,7 @@ export const generateStyles = ({
             height: innerActiveRingRadius * 2,
             borderRadius: innerActiveRingRadius,
             backgroundColor: inActiveTrackColor ?? COLORS[theme].inactiveTrack,
+            overflow: "hidden",
             zIndex: 3,
         },
         innerRingMask: {
@@ -159,6 +167,7 @@ export const generateStyles = ({
             height: (radius - inActiveTrackWidth) * 2,
             borderRadius: radius - inActiveTrackWidth,
             backgroundColor: backgroundColor ?? COLORS[theme].background,
+            overflow: "hidden",
             zIndex: 4,
         },
     });

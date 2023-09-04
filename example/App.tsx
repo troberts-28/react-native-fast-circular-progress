@@ -5,11 +5,9 @@ import { ProgressRing, ProgressRingRef } from "./src";
 import { Easing } from "react-native-reanimated";
 
 const App = () => {
-    const [progress, setProgress] = useState(0);
-
     useEffect(() => {
         const timeout = setTimeout(() => {
-            setProgress(10);
+            ref.current?.reset({startInPausedState: false});
         }, 1500);
         return () => {
             clearTimeout(timeout);
@@ -24,7 +22,7 @@ const App = () => {
         <View style={styles.container}>
             <ProgressRing
                 ref={ref}
-                progress={0}
+                progress={40}
                 size={size}
                 trackWidth={size * 0.12}
                 inActiveTrackWidth={size * 0.185}
@@ -32,7 +30,7 @@ const App = () => {
                 easing={Easing.linear}
                 startInPausedState
             />
-            <View style={{ flexDirection: "row" }}>
+            <View style={{ flexDirection: "row", marginTop: 40 }}>
                 <Button
                     title="Play"
                     onPress={() => {
