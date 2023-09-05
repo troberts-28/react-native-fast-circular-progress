@@ -6,7 +6,6 @@ import { TrackColorType } from ".";
 export interface CustomProgressRingStyles {
     theme: "light" | "dark";
     size: number;
-    progress: number;
     trackWidth: number;
     inActiveTrackWidth: number;
     trackColor?: string | TrackColorType[];
@@ -33,7 +32,6 @@ const COLORS = {
 export const generateStyles = ({
     theme,
     size,
-    progress,
     trackWidth,
     inActiveTrackWidth,
     trackColor,
@@ -47,10 +45,6 @@ export const generateStyles = ({
     const ringPadding = (inActiveTrackWidth - trackWidth) / 2;
     const activeRingRadius = radius - ringPadding;
     const innerActiveRingRadius = radius - inActiveTrackWidth + ringPadding;
-    const middleTrackRadius = radius - inActiveTrackWidth / 2;
-    const angle = -Math.PI / 2 + 2 * Math.PI * progress;
-    const x = middleTrackRadius * Math.cos(angle);
-    const y = middleTrackRadius * Math.sin(angle);
 
     const initialTrackColor =
         typeof trackColor === "string" || trackColor === undefined
@@ -141,8 +135,6 @@ export const generateStyles = ({
             width: trackWidth,
             height: trackWidth,
             borderRadius: trackWidth / 2,
-            top: y + radius - trackWidth / 2,
-            left: x + radius - trackWidth / 2,
             backgroundColor: initialTrackColor ?? COLORS[theme].track,
             opacity: 0,
             overflow: "hidden",

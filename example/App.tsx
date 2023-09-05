@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { View, StyleSheet, Button } from "react-native";
 
 import { ProgressRing, ProgressRingRef } from "./src";
@@ -14,7 +14,7 @@ const App = () => {
         };
     }, []);
 
-    const size = 160;
+    const size = 126;
 
     const ref = useRef<ProgressRingRef>(null);
 
@@ -22,7 +22,7 @@ const App = () => {
         <View style={styles.container}>
             <ProgressRing
                 ref={ref}
-                progress={40}
+                progress={80}
                 size={size}
                 trackWidth={size * 0.12}
                 inActiveTrackWidth={size * 0.185}

@@ -11,16 +11,17 @@ import Animated, {
     Easing,
     useSharedValue,
     useAnimatedStyle,
-    withTiming,
     EasingFunction,
     EasingFunctionFactory,
-    withDelay,
-    runOnJS,
     interpolateColor,
     cancelAnimation,
+    runOnUI,
 } from "react-native-reanimated";
 
 import { generateStyles } from "./ProgressRing.styles";
+import {
+    animateProgressWorklet,
+} from "./worklets";
 
 export type TrackColorType = {
     value: number;
@@ -87,7 +88,6 @@ const ProgressRing = forwardRef(
                 generateStyles({
                     theme,
                     size,
-                    progress,
                     trackWidth,
                     inActiveTrackWidth,
                     trackColor,
@@ -100,7 +100,6 @@ const ProgressRing = forwardRef(
             [
                 theme,
                 size,
-                progress,
                 trackWidth,
                 inActiveTrackWidth,
                 trackColor,
@@ -127,59 +126,21 @@ const ProgressRing = forwardRef(
         const angle = useSharedValue(-Math.PI / 2);
 
         const animateProgress = useCallback(() => {
-            if (animatedProgress.value === adjustedProgress) {
-                return;
-            }
-
-            const adjustedDuration =
-                adjustedProgress - previousProgress.value != 0
-                    ? Math.abs(
-                          (adjustedProgress - animatedProgress.value) /
-                              (adjustedProgress - previousProgress.value)
-                      ) * duration
-                    : duration;
-
-            animationInProgress.value = true;
-
-            animatedProgress.value = withDelay(
-                delay,
-                withTiming(
+            runOnUI(() => {
+                animateProgressWorklet({
+                    animatedProgress,
+                    previousProgress,
+                    animationInProgress,
+                    angle,
                     adjustedProgress,
-                    {
-                        duration: adjustedDuration,
-                        easing,
-                    },
-                    (isFinished) => {
-                        if (isFinished) {
-                            animationInProgress.value = false;
-                            previousProgress.value = animatedProgress.value;
-                            if (onAnimationComplete) {
-                                runOnJS(onAnimationComplete)();
-                            }
-                        }
-                    }
-                )
-            );
-
-            // map progress [0, 1] to angle [-π/2, 3π/2]
-            angle.value = withDelay(
-                delay,
-                withTiming(-Math.PI / 2 + 2 * Math.PI * adjustedProgress, {
-                    duration: adjustedDuration,
+                    duration,
                     easing,
-                })
-            );
+                    delay,
+                    onAnimationComplete,
+                });
+            })();
             // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [
-            adjustedProgress,
-            animatedProgress,
-            angle,
-            delay,
-            duration,
-            easing,
-            onAnimationComplete,
-            previousProgress.value,
-        ]);
+        }, [delay, duration, easing, onAnimationComplete]);
 
         const play = useCallback(() => {
             // Use the stored progress to continue the animation
@@ -338,7 +299,7 @@ const ProgressRing = forwardRef(
                     { translateY: y + radius - trackWidth / 2 },
                 ],
             };
-        }, []);
+        }, [size, trackWidth, inActiveTrackWidth]);
 
         return (
             <View style={styles.container}>
@@ -381,25 +342,26 @@ const ProgressRing = forwardRef(
                     />
                 </Animated.View>
 
+                {/* Circle at the start for rounded edge */}
                 {useRoundedTip ? (
-                    <>
-                        {/* Circle at the start for rounded edge */}
-                        <Animated.View
-                            style={[
-                                styles.roundedTipStart,
-                                startTipAnimatedStyle,
-                                trackAnimatedColorStyle,
-                            ]}
-                        />
-                        {/* Circle at the end for rounded edge */}
-                        <Animated.View
-                            style={[
-                                styles.roundedTipEnd,
-                                endTipAnimatedStyle,
-                                trackAnimatedColorStyle,
-                            ]}
-                        />
-                    </>
+                    <Animated.View
+                        style={[
+                            styles.roundedTipStart,
+                            startTipAnimatedStyle,
+                            trackAnimatedColorStyle,
+                        ]}
+                    />
+                ) : null}
+
+                {/* Circle at the end for rounded edge */}
+                {useRoundedTip ? (
+                    <Animated.View
+                        style={[
+                            styles.roundedTipEnd,
+                            endTipAnimatedStyle,
+                            trackAnimatedColorStyle,
+                        ]}
+                    />
                 ) : null}
 
                 {/* Circle to show the inner inactive track */}
