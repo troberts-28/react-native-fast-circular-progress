@@ -6,7 +6,7 @@
         "url": "https://github.com/troberts-28"
     },
     "license": "MIT",
-    "version": "1.1.1",
+    "version": "1.1.2",
     "main": "dist/commonjs/index.js",
     "types": "dist/typescript/src/index.d.ts",
     "scripts": {
@@ -33,7 +33,6 @@
         "registry": "https://registry.npmjs.org/"
     },
     "files": [
-        "src",
         "dist",
         "package.json",
         "README.md",
@@ -144,10 +143,5 @@
     "eslintIgnore": [
         "node_modules/",
         "dist/"
-    ],
-    "dependencies": {
-        "react": "^18.3.1",
-        "react-native": "^0.74.3",
-        "react-native-reanimated": "^3.12.1"
-    }
+    ]
 }
