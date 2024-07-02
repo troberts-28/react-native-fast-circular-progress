@@ -105,6 +105,36 @@ progressRingRef.current.reset(options?: { startInPausedState?: boolean });
 
 <br>
 
+## Contributing 🧑‍🤝‍🧑
+
+Contributions to this project are more than welcome.
+
+### Dev Setup
+
+To get this project running locally:
+
+1. Clone the Git repo.
+2. Run `yarn` to install the base dependencies
+3. Run `yarn setup` from the project root (this installs the example's additional dependencies)
+4. Run `yarn start` to start the example in Expo Go.
+5. Start adding cool stuff! Your changes should be immediately reflected in the Expo Go app.
+
+You can also run the library in bare React Native:
+1. Clone the Git repo.
+2. Run `yarn` to install the base dependencies
+3. Run `yarn setup-dev`.
+4. Run `yarn start-bare:android` or `start-bare:ios` to start the project on an emulator/device.
+
+### GitHub Guidelines
+
+There are two permenant branches: `main` and `develop`. You should never work directly on either of these branches.
+
+1. Create a new branch off `develop` for your work using the pattern `feature/{DESCRIPTION}`.
+2. When you think your work is ready for review, submit a PR from your branch back to `develop`.
+3. Once the PR is resolved, your work will be merged into `develop`, and will be included in the next major/minor release.
+
+<br>
+
 ## License 📝
 
 This project is licensed under the [MIT License](LICENSE).
