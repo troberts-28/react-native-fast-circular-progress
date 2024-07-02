@@ -1,36 +1,37 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
-    EasingFunction,
-    EasingFunctionFactory,
-    SharedValue,
     runOnJS,
     withDelay,
     withTiming,
 } from "react-native-reanimated";
+import type {
+    EasingFunction,
+    EasingFunctionFactory,
+    SharedValue} from "react-native-reanimated";
 
 export const animateProgressWorklet = (variables: {
-    animatedProgress: SharedValue<number>;
-    previousProgress: SharedValue<number>;
-    animationInProgress: SharedValue<boolean>;
-    angle: SharedValue<number>;
     adjustedProgress: number;
+    angle: SharedValue<number>;
+    animatedProgress: SharedValue<number>;
+    animationInProgress: SharedValue<boolean>;
+    delay: number;
     duration: number;
     easing: EasingFunction | EasingFunctionFactory;
-    delay: number;
     onAnimationComplete?: () => void;
+    previousProgress: SharedValue<number>;
 }) => {
     "worklet";
 
     const {
-        animatedProgress,
-        previousProgress,
-        animationInProgress,
-        angle,
         adjustedProgress,
+        angle,
+        animatedProgress,
+        animationInProgress,
+        delay,
         duration,
         easing,
-        delay,
         onAnimationComplete,
+        previousProgress,
     } = variables;
 
     if (animatedProgress.value === adjustedProgress) {

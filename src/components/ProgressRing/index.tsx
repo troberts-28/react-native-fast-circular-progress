@@ -6,54 +6,57 @@ import React, {
     useCallback,
     useRef,
 } from "react";
+
 import { View } from "react-native";
 import Animated, {
     Easing,
     useSharedValue,
     useAnimatedStyle,
-    EasingFunction,
-    EasingFunctionFactory,
     interpolateColor,
     cancelAnimation,
     runOnUI,
 } from "react-native-reanimated";
+import type {
+    EasingFunction,
+    EasingFunctionFactory,
+} from "react-native-reanimated";
 
 import { generateStyles } from "./ProgressRing.styles";
-import {
-    animateProgressWorklet,
-} from "./worklets";
+import { animateProgressWorklet } from "./worklets";
 
 export type TrackColorType = {
-    value: number;
     color: string;
+    value: number;
 };
 
 export interface ProgressRingRef {
-    play: () => void;
     pause: () => void;
+    play: () => void;
     reset: (options?: { startInPausedState?: boolean }) => void;
 }
 
 export interface ProgressRingProps {
-    progress: number; // between zero and 100
-    initialProgress?: number; // useful if using as a countdown timer
-    duration?: number;
-    delay?: number;
-    startInPausedState?: boolean;
-    onAnimationComplete?: () => void;
-    easing?: EasingFunction | EasingFunctionFactory;
-    clockwise?: boolean;
-    rotateStartPointBy?: number;
-    size?: number;
-    trackWidth?: number;
-    inActiveTrackWidth?: number;
-    useRoundedTip?: boolean;
-    theme?: "light" | "dark";
-    trackColor?: string | TrackColorType[];
-    inActiveTrackColor?: string;
     backgroundColor?: string;
+    clockwise?: boolean;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     containerStyle?: any;
+    delay?: number;
+    // useful if using as a countdown timer
+    duration?: number;
+    easing?: EasingFunction | EasingFunctionFactory;
+    inActiveTrackColor?: string;
+    inActiveTrackWidth?: number;
+    // between zero and 100
+    initialProgress?: number;
+    onAnimationComplete?: () => void;
+    progress: number;
+    rotateStartPointBy?: number;
+    size?: number;
+    startInPausedState?: boolean;
+    theme?: "light" | "dark";
+    trackColor?: string | TrackColorType[];
+    trackWidth?: number;
+    useRoundedTip?: boolean;
 }
 
 // FIX STYLING FOR active track width > inactive track width
@@ -62,34 +65,42 @@ export interface ProgressRingProps {
 const ProgressRing = forwardRef(
     (
         {
-            progress,
-            initialProgress = 0,
-            duration = 500,
-            delay = 0,
-            startInPausedState = false,
-            onAnimationComplete,
-            easing = Easing.linear,
+            backgroundColor,
             clockwise = true,
+            containerStyle,
+            delay = 0,
+            duration = 500,
+            easing = Easing.linear,
+            inActiveTrackColor,
+            inActiveTrackWidth = 40,
+            initialProgress = 0,
+            onAnimationComplete,
+            progress,
             rotateStartPointBy = 0,
             size = 300,
-            trackWidth = 30,
-            inActiveTrackWidth = 40,
-            useRoundedTip = true,
+            startInPausedState = false,
             theme = "light",
             trackColor,
-            inActiveTrackColor,
-            backgroundColor,
-            containerStyle,
+            trackWidth = 30,
+            useRoundedTip = true,
         }: ProgressRingProps,
         ref
     ) => {
+        const adjustedSizes = useMemo(() => {
+            return {
+                size: Math.round(size),
+                trackWidth: Math.round(trackWidth),
+                inActiveTrackWidth: Math.round(inActiveTrackWidth),
+            };
+        }, [inActiveTrackWidth, size, trackWidth]);
+
         const styles = useMemo(
             () =>
                 generateStyles({
                     theme,
-                    size,
-                    trackWidth,
-                    inActiveTrackWidth,
+                    size: adjustedSizes.size,
+                    trackWidth: adjustedSizes.trackWidth,
+                    inActiveTrackWidth: adjustedSizes.inActiveTrackWidth,
                     trackColor,
                     inActiveTrackColor,
                     backgroundColor,
@@ -99,9 +110,9 @@ const ProgressRing = forwardRef(
                 }),
             [
                 theme,
-                size,
-                trackWidth,
-                inActiveTrackWidth,
+                adjustedSizes.size,
+                adjustedSizes.trackWidth,
+                adjustedSizes.inActiveTrackWidth,
                 trackColor,
                 inActiveTrackColor,
                 backgroundColor,
@@ -285,8 +296,8 @@ const ProgressRing = forwardRef(
                 return {};
             }
 
-            const radius = size / 2;
-            const middleTrackRadius = radius - inActiveTrackWidth / 2;
+            const radius = adjustedSizes.size / 2;
+            const middleTrackRadius = radius - adjustedSizes.inActiveTrackWidth / 2;
             const x = middleTrackRadius * Math.cos(angle.value);
             const y = middleTrackRadius * Math.sin(angle.value);
 
@@ -295,11 +306,11 @@ const ProgressRing = forwardRef(
                 top: undefined,
                 left: undefined,
                 transform: [
-                    { translateX: x + radius - trackWidth / 2 },
-                    { translateY: y + radius - trackWidth / 2 },
+                    { translateX: x + radius - adjustedSizes.trackWidth / 2 },
+                    { translateY: y + radius - adjustedSizes.trackWidth / 2 },
                 ],
             };
-        }, [size, trackWidth, inActiveTrackWidth]);
+        }, [adjustedSizes.size, adjustedSizes.trackWidth, adjustedSizes.inActiveTrackWidth]);
 
         return (
             <View style={styles.container}>
