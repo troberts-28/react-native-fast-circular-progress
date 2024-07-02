@@ -1,19 +1,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { StyleSheet } from "react-native";
 
-import { TrackColorType } from ".";
+import type { TrackColorType } from ".";
 
 export interface CustomProgressRingStyles {
-    theme: "light" | "dark";
-    size: number;
-    trackWidth: number;
-    inActiveTrackWidth: number;
-    trackColor?: string | TrackColorType[];
-    inActiveTrackColor?: string;
     backgroundColor?: string;
     clockwise?: boolean;
-    rotateStartPointBy?: number;
     containerStyle?: any;
+    inActiveTrackColor?: string;
+    inActiveTrackWidth: number;
+    rotateStartPointBy?: number;
+    size: number;
+    theme: "light" | "dark";
+    trackColor?: string | TrackColorType[];
+    trackWidth: number;
 }
 
 const COLORS = {
@@ -30,16 +30,16 @@ const COLORS = {
 };
 
 export const generateStyles = ({
-    theme,
-    size,
-    trackWidth,
-    inActiveTrackWidth,
-    trackColor,
-    inActiveTrackColor,
     backgroundColor,
     clockwise,
-    rotateStartPointBy,
     containerStyle,
+    inActiveTrackColor,
+    inActiveTrackWidth,
+    rotateStartPointBy,
+    size,
+    theme,
+    trackColor,
+    trackWidth,
 }: CustomProgressRingStyles) => {
     const radius = size / 2;
     const ringPadding = (inActiveTrackWidth - trackWidth) / 2;
@@ -80,7 +80,7 @@ export const generateStyles = ({
             width: activeRingRadius * 2,
             height: activeRingRadius * 2,
             alignItems: "flex-end",
-            zIndex: 1,
+            zIndex: 2,
         },
         activeTrackRightHalf: {
             width: activeRingRadius,
